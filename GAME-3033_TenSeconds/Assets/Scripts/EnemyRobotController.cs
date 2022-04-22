@@ -13,6 +13,7 @@ public class EnemyRobotController : EnemyController
     private int anim_id_atk1_;
     private int anim_id_flinch_;
     private int anim_id_die_;
+    private float bomb_timer_ = 10.0f;
 
     void Awake()
     {
@@ -59,6 +60,14 @@ public class EnemyRobotController : EnemyController
     private void FixedUpdate()
     {
         //DoBaseFixedUpdate();
+        if (bomb_timer_ > 0)
+        {
+            bomb_timer_ -= Time.deltaTime;
+        }
+        else
+        {
+
+        }
     }
 
     /// <summary>
@@ -116,6 +125,11 @@ public class EnemyRobotController : EnemyController
         }
     }
 
+    protected void DoExplode()
+    {
+
+    }
+
     protected override void DoDeath()
     {
         if (state_ != GlobalEnums.EnemyState.DIE)
@@ -138,14 +152,13 @@ public class EnemyRobotController : EnemyController
         int rand_item = Random.Range(0, 2);
         if (rand_item == 0)
         {
-            ItemWorld.SpawnItemWorld(transform.position, new Item { item_type = Item.ItemType.POTION, amount = 1 });
+            //ItemWorld.SpawnItemWorld(transform.position, new Item { item_type = Item.ItemType.POTION, amount = 1 });
         }
         else
         {
             ItemWorld.SpawnItemWorld(transform.position, new Item { item_type = Item.ItemType.AMMO, amount = 1 });
         }
         
-
         SetState(GlobalEnums.EnemyState.DIE);
         StartCoroutine(Despawn());
     }

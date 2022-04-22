@@ -16,11 +16,13 @@ public class ObjManager : MonoBehaviour
     public Queue<GameObject> obj_pool;
     public int obj_num;
     public Material inactive_mat;
-    public List<Transform> spawn_locs = new List<Transform>();
-    public Vector2 spawn_interval = new Vector2(5.0f, 10.0f);
+    public List<Transform> spawn_grps = new List<Transform>();
+    private List<Transform> spawn_locs = new List<Transform>();
+    public Vector2 spawn_interval = new Vector2(10.0f, 10.0f);
     private float spawn_timer_ = 0.0f;
     private float timer_ = 0.0f;
     //public GameObject obj_obj;
+    public int spawn_amount = 1;
 
     private ObjFactory factory_;
 
@@ -33,6 +35,14 @@ public class ObjManager : MonoBehaviour
         spawn_timer_ = Random.Range(spawn_interval.x, spawn_interval.y);
 
         player_ = FindObjectOfType<Player.ThirdPersonController>();
+
+        foreach (Transform grp in spawn_grps)
+        {
+            foreach (Transform child in grp)
+            {
+                spawn_locs.Add(child);
+            }
+        }
     }
 
     private void FixedUpdate()
@@ -41,9 +51,14 @@ public class ObjManager : MonoBehaviour
         if (timer_ > spawn_timer_)
         {
             timer_ = 0;
-            int idx = Random.Range(0, spawn_locs.Count);
-            Vector3 spawn_pos = spawn_locs[idx].position;
-            GetObj(spawn_pos);
+            
+            for (int i = 0; i < spawn_amount; i++)
+            {
+                int idx = Random.Range(0, spawn_locs.Count);
+                Vector3 spawn_pos = spawn_locs[idx].position;
+                GetObj(spawn_pos);
+            }
+            
             spawn_timer_ = Random.Range(spawn_interval.x, spawn_interval.y);
         }
     }
