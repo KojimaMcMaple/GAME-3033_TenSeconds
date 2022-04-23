@@ -1185,7 +1185,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2fee469a42c636345ae9b09f7c763e7a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  next_level_: GameplayScene
+  next_level_: KH_StarterPlaygroundScene
   prev_level_: 
   overlay_panel_: {fileID: 773176524}
   pause_overlay_panel_: {fileID: 0}

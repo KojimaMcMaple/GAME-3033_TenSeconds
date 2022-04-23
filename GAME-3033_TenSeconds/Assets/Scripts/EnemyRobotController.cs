@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
+using TMPro;
 
 public class EnemyRobotController : EnemyController
 {
@@ -13,7 +14,7 @@ public class EnemyRobotController : EnemyController
     private int anim_id_atk1_;
     private int anim_id_flinch_;
     private int anim_id_die_;
-    private float bomb_timer_ = 10.0f;
+    [SerializeField] private TMP_Text timer_txt_;
 
     void Awake()
     {
@@ -60,13 +61,22 @@ public class EnemyRobotController : EnemyController
     private void FixedUpdate()
     {
         //DoBaseFixedUpdate();
+        if (is_death_)
+        {
+            return;
+        }
+        if (!can_start_bomb_)
+        {
+            return;
+        }
         if (bomb_timer_ > 0)
         {
             bomb_timer_ -= Time.deltaTime;
+            timer_txt_.text = ((int)bomb_timer_).ToString() + "s";
         }
         else
         {
-
+            DoExplode();
         }
     }
 
@@ -104,6 +114,7 @@ public class EnemyRobotController : EnemyController
         {
             return;
         }
+        can_start_bomb_ = true;
         Debug.Log("> Robot DoAggro");
         if (target_ == null)
         {
@@ -127,7 +138,14 @@ public class EnemyRobotController : EnemyController
 
     protected void DoExplode()
     {
-
+        can_start_bomb_ = false;
+        bomb_timer_ = 0.1f;
+        bomb_manager_.GetBomb(transform.position);
+        for (int i = 0; i < 2; i++)
+        {
+            obj_manager_.GetObj(transform.position);
+        }
+        DoDeath();
     }
 
     protected override void DoDeath()
@@ -160,6 +178,7 @@ public class EnemyRobotController : EnemyController
         }
         
         SetState(GlobalEnums.EnemyState.DIE);
+        is_death_ = true;
         StartCoroutine(Despawn());
     }
 

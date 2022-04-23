@@ -31,6 +31,7 @@ public static class GlobalEnums
         HIT,
         ULTIMA,
         ULTIMA2, //no rotation
+        BOMB,
         NUM_OF_TYPES
     };
 

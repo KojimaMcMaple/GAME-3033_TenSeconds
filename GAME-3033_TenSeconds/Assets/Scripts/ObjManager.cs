@@ -177,4 +177,9 @@ public class ObjManager : MonoBehaviour
                 break;
         }
     }
+
+    public void IncrementSpawnAmount()
+    {
+        spawn_amount += 2;
+    }
 }

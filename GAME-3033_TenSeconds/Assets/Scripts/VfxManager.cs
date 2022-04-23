@@ -139,6 +139,13 @@ public class VfxManager : MonoBehaviour
                 }
                 temp2 = ultima_vfx2_pool_.Dequeue();
                 break;
+            case GlobalEnums.VfxType.BOMB:
+                if (ultima_vfx2_pool_.Count < 1) //add one vfx if pool empty
+                {
+                    AddVfx(GlobalEnums.VfxType.ULTIMA2); //no rotation
+                }
+                temp = ultima_vfx2_pool_.Dequeue();
+                break;
             default:
                 break;
         }

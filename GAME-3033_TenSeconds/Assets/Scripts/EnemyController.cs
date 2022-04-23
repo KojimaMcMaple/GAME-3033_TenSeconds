@@ -54,10 +54,13 @@ public class EnemyController : MonoBehaviour, IDamageable<int>
     protected bool is_stunned_ = false;
     protected Coroutine launched_coroutine_ = null;
     protected bool is_death_ = false;
+    protected float bomb_timer_ = 10.0f;
+    protected bool can_start_bomb_ = false;
 
     // MANAGERS
     protected VfxManager vfx_manager_;
-    private ObjManager obj_manager_;
+    protected ObjManager obj_manager_;
+    protected BombManager bomb_manager_;
 
     // SFX
     [SerializeField] protected List<AudioClip> attack_sfx_ = new List<AudioClip>();
@@ -78,6 +81,7 @@ public class EnemyController : MonoBehaviour, IDamageable<int>
         hit_cooldown_delta_ = hit_cooldown_;
 
         obj_manager_ = FindObjectOfType<ObjManager>();
+        bomb_manager_ = FindObjectOfType<BombManager>();
 
         // RAGDOLL
         if (rig_ != null)
@@ -109,6 +113,7 @@ public class EnemyController : MonoBehaviour, IDamageable<int>
     {
         health = hp_;
         is_death_ = false;
+        can_start_bomb_ = false;
         state_ = GlobalEnums.EnemyState.IDLE;
         SetNavMeshMode(false);
         SetRagdollMode(true);
@@ -119,6 +124,7 @@ public class EnemyController : MonoBehaviour, IDamageable<int>
     protected IEnumerator DoEndSpawnIn()
     {
         yield return new WaitForSeconds(4.0f);
+        can_start_bomb_ = true;
         SetRagdollMode(false);
         SetNavMeshMode(true);
         DoAggro();
@@ -237,6 +243,7 @@ public class EnemyController : MonoBehaviour, IDamageable<int>
     {
         state_ = GlobalEnums.EnemyState.STUNNED;
         is_stunned_ = true;
+        can_start_bomb_ = false;
 
         SetNavMeshMode(false);
 
@@ -280,6 +287,7 @@ public class EnemyController : MonoBehaviour, IDamageable<int>
             SetNavMeshMode(true);
 
             is_stunned_ = false;
+            can_start_bomb_ = true;
             DoAggro();
         }
     }
